@@ -288,3 +288,68 @@ function showHeadCssLinks($fileArray)
         }
     }
 }
+
+
+
+/*
+ * RENDER <SCRIPT> TAG WITH HREF TO PRODUCTION/DEVELOPMENT FILES
+ */
+
+function showScriptLinks($fileArray, $outputFile = '', $async = false)
+{
+    require_once('vendor/magic-minifier-3.0.4/class.magic-min.php' );
+    //Initialize the class with image encoding, gzip, a timer, and use the google closure API
+    $vars = array( 
+        'encode' => false, 
+        'timer' => false, 
+        'gzip' => true, 
+        'closure' => true, 
+        'remove_comments' => true, 
+        'force_rebuild' => false, //USE THIS SPARINGLY!
+        'hashed_filenames' => false,
+    );
+    $minified = new Minifier($vars);
+    
+    if ($async) {
+        $asyncCode = ' async=""';
+    }
+    
+    if (is_array($fileArray))
+    {
+        if (!isProduction($GLOBALS['projectDomain']))
+        {
+            foreach ($fileArray as $file)
+            {
+                if (file_exists($file)) {
+                    echo '        <script src="'.$file.'"'.$asyncCode.'></script>'.PHP_EOL;
+                } else {
+                    echo '        <!--  nelze načíst soubor:   '.$file.'  -->'.PHP_EOL;
+                }
+            }
+        }
+        if (isProduction($GLOBALS['projectDomain']))
+        {
+            echo '        <script src="';
+            echo $minified->merge('build/js/'.$outputFile.'.min.js', 'js', $fileArray);
+            echo '"'.$asyncCode.'></script>'.PHP_EOL;
+        }
+    }
+    else
+    {
+        if (!isProduction($GLOBALS['projectDomain']))
+        {
+            if (file_exists($GLOBALS['baseProductionPath'].'/'.$file)) {
+                echo '        <script src="'.$fileArray.'"'.$asyncCode.'></script>'.PHP_EOL;
+            } else {
+                echo '        <!--  nelze načíst soubor:   '.$fileArray.'  -->'.PHP_EOL;
+            }
+        }
+        if (isProduction($GLOBALS['projectDomain']))
+        {
+            $fileArray = array($fileArray);
+            echo '        <script src="';
+            echo $minified->merge('build/js/'.$outputFile.'.min.js', 'js', $fileArray);
+            echo '"'.$asyncCode.'></script>'.PHP_EOL;
+        }
+    }
+}
