@@ -37,6 +37,8 @@
             showHeadCssLinks(genCssFiles(array('index-base','index-mask','index-utils')));
             
             echo '        <script src="//ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>'.PHP_EOL;
+            
+            showScriptLinks(array('assets/modernizr/modernizr-custom.min.js'), 'head', true);
         ?>
         <meta name="theme-color" content="">
         <?php
