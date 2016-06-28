@@ -130,3 +130,161 @@ function autoUTF($s)
     // assume ISO-8859-2
     return iconv('ISO-8859-2', 'UTF-8', $s);
 }
+
+
+
+/*
+ * INICIALIZACE LESS KONVERTORU
+ */
+
+use ILess\Parser;
+use ILess\FunctionRegistry;
+use ILess\Node\ColorNode;
+use ILess\Node\DimensionNode;
+use ILess\Cache\FileSystemCache;
+
+
+
+/*
+ * COMPILE LESS FILES AND WRITE INTO FILES
+ */
+
+function genCssFiles($files)
+{
+    $filePathLess = $GLOBALS['baseProductionPath'].'/skins/'.$GLOBALS['skin'].'/less';
+    
+    foreach ($files as $file)
+    {
+        require_once ('vendor/ILess/Autoloader.php');
+        ILess\Autoloader::register();
+        
+        $parser = new Parser(array(/*'compress' => false*/), new FileSystemCache([
+            'cache_dir' => getcwd() . '/.cache+tmp/iless-cache',
+            'ttl' => 86400 // the lifetime of cached files in seconds (1 day by default)
+        ]) );
+        
+        $parser->parseFile($filePathLess.'/'.$file.'.less');
+        
+        // CONVERT TO UTF-8
+        $fileContent = autoUTF($parser->getCSS());
+        
+        // WRITE FILES
+        writeCssFiles($fileContent, $file, null);
+    }
+    
+    return $files;
+}
+
+
+
+/*
+ * WRITE PRODUCTION/DEVELOPMENT CSS FILES
+ */
+
+function writeCssFiles($content = '', $outputFile = '', $showInfo = false)
+{
+    // DEVELOPMENT FILES
+    
+    $developmentFolder = $GLOBALS['baseProductionPath'].'/.cache+tmp';
+    $developmentOutputFile = $developmentFolder.'/'.$outputFile.'-'.$GLOBALS['skin'].'.css';
+    $fileToWrite = fopen($developmentOutputFile, "w+");
+    
+    if (!is_dir($developmentFolder)) {
+        mkdir($developmentFolder);
+    }
+    
+    if ($showInfo)
+    {
+        echo PHP_EOL;
+        if(!$fileToWrite) {
+            die("Nelze vytvořit / otevřít soubor pro zápis."); 
+        }
+        elseif(fputs($fileToWrite, $content) === false)
+        {
+            die("Do souboru nelze zapisovat.");
+        }
+        else
+        {
+            echo 'Soubor '.$developmentOutputFile.' byl vytvořen.';
+        }
+    }
+    else
+    {
+        fputs($fileToWrite, $content);
+    }
+    
+    fclose($fileToWrite);
+    
+    
+    // PRODUCTION FILES
+    
+    require_once('vendor/cssmin-3.0.1/cssmin.inc');
+    
+    $productionFolder = $GLOBALS['baseProductionPath'].'/build/css';
+    $productionOutputFile = $productionFolder.'/'.$outputFile.'-'.$GLOBALS['skin'].'.min.css';
+    $content = CssMin::minify($content);
+    $fileToWrite = fopen($productionOutputFile, "w+");
+    
+    if (!is_dir($productionFolder)) {
+        mkdir($productionFolder);
+    }
+    
+    if ($showInfo)
+    {
+        echo PHP_EOL;
+        if(!$fileToWrite) {
+            die("Nelze vytvořit / otevřít soubor pro zápis."); 
+        }
+        elseif(fputs($fileToWrite, $content) === false)
+        {
+            die("Do souboru nelze zapisovat."); 
+        }
+        else
+        {
+            echo 'Byl vytvořen soubor:  '.$productionOutputFile; 
+        }
+        echo PHP_EOL;
+    }
+    else
+    {
+        fputs($fileToWrite, $content);
+    }
+    
+    fclose($fileToWrite);
+}
+
+
+
+/*
+ * RENDER <LINK> TAG WITH HREF TO PRODUCTION/DEVELOPMENT CSS FILES
+ */
+
+function showHeadCssLinks($fileArray)
+{
+    if (is_array($fileArray)) {
+        foreach ($fileArray as $file)
+        {
+            $file = $file.'-'.$GLOBALS['skin'];
+            
+            $developmentOutputFile = $GLOBALS['baseProductionPath'].'/.cache+tmp/'.$file.'.css';
+            $productionOutputFile  = $GLOBALS['baseProductionPath'].'/build/css/'.$file.'.min.css';
+            
+            if (!isProduction($GLOBALS['projectDomain']))
+            {
+                if (file_exists($developmentOutputFile)) {
+                    echo '        <link rel="stylesheet" href=".cache+tmp/'.$file.'.css">'.PHP_EOL;
+                } else {
+                    echo '        <!--  nelze načíst soubor:   .cache+tmp/'.$file.'.css  -->'.PHP_EOL;
+                }
+            }
+            if (isProduction($GLOBALS['projectDomain']))
+            {
+                if (file_exists($productionOutputFile)) {
+                    echo '        <link rel="stylesheet" href="build/css/'.$file.'.min.css">'.PHP_EOL;
+                } else {
+                    echo '        <!--  nelze načíst soubor:   build/css/'.$file.'.min.css  -->'.PHP_EOL;
+                }
+            }
+        }
+    }
+}
