@@ -30,6 +30,12 @@
         <meta name="robots" content="index, follow">
         <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Roboto:500,400,400italic&ampsubset=latin,latin-ext">
         <?php
+            if (!isProduction($projectDomain)) {
+                showHeadCssLinks(genCssFiles(array('show-grid')));
+            }
+            
+            showHeadCssLinks(genCssFiles(array('index-base','index-mask','index-utils')));
+            
             echo '        <script src="//ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>'.PHP_EOL;
         ?>
         <meta name="theme-color" content="">

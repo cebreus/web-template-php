@@ -7,4 +7,4 @@ $projectDomain = 'iless.cebreus.eu';
 $baseProductionPath = '/data/web/virtuals/87664/virtual/www/subdom/iless';
 
 // SKIN NAME
-$skin = 'boostrap-default';
+$skin = 'boostrap-cebreus';
