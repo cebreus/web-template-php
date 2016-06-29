@@ -18,7 +18,7 @@
     }
 
 ?><!doctype html>
-<html lang="cs" class="no-js">
+<html lang="cs" class="no-js responsive-layout">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -51,9 +51,16 @@
             <article>
                 <h1>Heading 1</h1>
             </article>
+            <aside class="main-content__gallery row">
+                <div class="col-sm-3"><a href="content/picture/sample.png" rel="main-content__gallery"><img class="img-responsive img-thumbnail" src="content/picture/sample.png" alt="sample image"></a></div>
+                <div class="col-sm-3"><a href="content/picture/sample.png" rel="main-content__gallery"><img class="img-responsive img-thumbnail" src="content/picture/sample.png" alt="sample image"></a></div>
+                <div class="col-sm-3"><a href="content/picture/sample.png" rel="main-content__gallery"><img class="img-responsive img-thumbnail" src="content/picture/sample.png" alt="sample image"></a></div>
+                <div class="col-sm-3"><a href="content/picture/sample.png" rel="main-content__gallery"><img class="img-responsive img-thumbnail" src="content/picture/sample.png" alt="sample image"></a></div>
+            </aside>
         </main>
         <footer></footer>
         <?php
+            showScriptLinks(array('assets/page-all.js'), 'footer', null);
             showAalyticsTracking('');
         ?>
     </body>
