@@ -6,18 +6,24 @@
     
     a {
         &[href^="http"],
-        &[href^="mailto"] {
-            padding-right: 1em;
-            background-position: right top;
+        &[href^="mailto"],
+        &[href^="tel"]{
+            padding-right: 1.3em;
+            background-position: right center;
             background-repeat: no-repeat;
+            background-size: 1em;
         }
         
         &[href^="http"] {
-            background-image: url("../picture/sys-link-out.gif@{file-version}");
+            background-image: url("@{baseProductionSkinPath}/picture/sys-link-out.svg@{file-version}");
         }
         
         &[href^="mailto"] {
-            background-image: url("../picture/sys-link-mail.gif@{file-version}");
+            background-image: url("@{baseProductionSkinPath}/picture/sys-link-mail.svg@{file-version}");
+        }
+        
+        &[href^="tel"] {
+            background-image: url("@{baseProductionSkinPath}/picture/sys-link-tel.svg@{file-version}");
         }
     }
 }
@@ -37,7 +43,7 @@
     a {
         &.link-file {
             .link-file-base-css();
-            background-image: url("../../../picture/files/default.svg@{file-version}");
+            background-image: url("@{baseProductionSkinPath}/picture/files/default.svg@{file-version}");
         }
         
         // AUDIO
@@ -51,7 +57,7 @@
         &[href$=".wav"]:not(.btn),
         &[href$=".wma"]:not(.btn) {
             .link-file-base-css();
-            background-image: url("../../../picture/files/audio.svg@{file-version}");
+            background-image: url("@{baseProductionSkinPath}/picture/files/audio.svg@{file-version}");
         }
         
         // VIDEO
@@ -72,7 +78,7 @@
         &[href$=".rm"]:not(.btn),
         &[href$=".wmv"]:not(.btn) {
             .link-file-base-css();
-            background-image: url("../../../picture/files/video.svg@{file-version}");
+            background-image: url("@{baseProductionSkinPath}/picture/files/video.svg@{file-version}");
         }
         
         // TEXT DOCUMENTS
@@ -88,7 +94,7 @@
         &[href$=".odt"]:not(.btn),
         &[href$=".fodt"]:not(.btn) {
             .link-file-base-css();
-            background-image: url("../../../picture/files/document.svg@{file-version}");
+            background-image: url("@{baseProductionSkinPath}/picture/files/document.svg@{file-version}");
         }
         
         // SPREADSHEETS DOCUMENTS
@@ -104,7 +110,7 @@
         &[href$=".ods"]:not(.btn),
         &[href$=".fods"]:not(.btn) {
             .link-file-base-css();
-            background-image: url("../../../picture/files/spreadsheet.svg@{file-version}");
+            background-image: url("@{baseProductionSkinPath}/picture/files/spreadsheet.svg@{file-version}");
         }
         
         // PRESENTATION DOCUMENTS
@@ -125,19 +131,19 @@
         &[href$=".sxi"]:not(.btn),
         &[href$=".sti"]:not(.btn) {
             .link-file-base-css();
-            background-image: url("../../../picture/files/presentaion.svg@{file-version}");
+            background-image: url("@{baseProductionSkinPath}/picture/files/presentaion.svg@{file-version}");
         }
         
         // PICTURE
-        &[href$=".gif"]:not(.btn),
-        &[href$=".jpg"]:not(.btn),
-        &[href$=".jpeg"]:not(.btn),
-        &[href$=".png"]:not(.btn),
+        &[href$=".gif"][target]:not(.btn),
+        &[href$=".jpg"][target]:not(.btn),
+        &[href$=".jpeg"][target]:not(.btn),
+        &[href$=".png"][target]:not(.btn),
         &[href$=".tiff"]:not(.btn),
         &[href$=".eps"]:not(.btn),
         &[href$=".wmf"]:not(.btn),
         &[href$=".emf"]:not(.btn),
-        &[href$=".svg"]:not(.btn),
+        &[href$=".svg"][target]:not(.btn),
         &[href$=".ai"]:not(.btn),
         &[href$=".odp"]:not(.btn),
         &[href$=".otp"]:not(.btn),
@@ -145,7 +151,7 @@
         &[href$=".sxi"]:not(.btn),
         &[href$=".sti"]:not(.btn) {
             .link-file-base-css();
-            background-image: url("../../../picture/files/picture.svg@{file-version}");
+            background-image: url("@{baseProductionSkinPath}/picture/files/picture.svg@{file-version}");
         }
         
         // ARCHIVES
@@ -163,7 +169,7 @@
         &[href$=".tgz"]:not(.btn),
         &[href$=".zip"]:not(.btn) {
             .link-file-base-css();
-            background-image: url("../../../picture/files/archive.svg@{file-version}");
+            background-image: url("@{baseProductionSkinPath}/picture/files/archive.svg@{file-version}");
         }
         
         
@@ -177,12 +183,12 @@
         &[href$=".less"]:not(.btn),
         &[href$=".scss"]:not(.btn) {
             .link-file-base-css();
-            background-image: url("../../../picture/files/code.svg@{file-version}");
+            background-image: url("@{baseProductionSkinPath}/picture/files/code.svg@{file-version}");
         }
         
         &[href$=".pdf"]:not(.btn) {
             .link-file-base-css();
-            background-image: url("../../../picture/files/pdf.svg@{file-version}");
+            background-image: url("@{baseProductionSkinPath}/picture/files/pdf.svg@{file-version}");
         }
     }
 }
