@@ -1,10 +1,13 @@
 <?php
 
 // PRODUCTION DOMAIN
-$projectDomain = 'iless.cebreus.eu';
+$projectDomain = '';
+//$projectDomain = 'iless.cebreus.eu';
 
 // PATH TO PROJECT ON PRODUCTION SERVER
 $baseProductionPath = '/data/web/virtuals/87664/virtual/www/subdom/iless';
 
 // SKIN NAME
-$skin = 'boostrap-cebreus';
+$skin = 'bootstrap-4';
+//$skin = 'bootstrap-cebreus';
+//$skin = 'bootstrap-default';
