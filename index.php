@@ -50,6 +50,12 @@
         <main class="container">
             <article>
                 <h1>Heading 1</h1>
+                <ul>
+                    <li><a href="http://domain.com">externí odkaz</a> v textu</li>
+                    <li><a href="mailto:aaa@aaa.com">e-mail</a> na osobu nebo firmu</li>
+                    <li><a href="tel:0420123456789">telefon</a> s možností vytočení</li>
+                    <li><a href="aa.pdf">soubor ke stažení</a> [PDF; 1,0 MB]</li>
+                </ul>
             </article>
             <aside class="main-content__gallery row">
                 <div class="col-sm-3"><a href="content/picture/sample.png" rel="main-content__gallery"><img class="img-responsive img-thumbnail" src="content/picture/sample.png" alt="sample image"></a></div>

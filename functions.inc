@@ -226,7 +226,7 @@ function writeCssFiles($content = '', $outputFile = '', $showInfo = false)
     $fileToWrite = fopen($productionOutputFile, "w+");
     
     if (!is_dir($productionFolder)) {
-        mkdir($productionFolder);
+        mkdir($productionFolder, 0777, true);
     }
     
     if ($showInfo)
