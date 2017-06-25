@@ -44,10 +44,13 @@
         <link rel="shortcut icon" href="<?php echo $pageIconPath; ?>/ico-48.png">
         
         <link rel="stylesheet" href="<?php echo $skinPath.'/index.css'; ?>">
-        <script src="/assets/modernizr/modernizr-custom.min.js"></script>
-        <script src="/build/js/jquery-3.2.1.min.js"></script>
-        <script src="/build/js/tether.min.js"></script>
-        <script src="/build/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="build/css/jquery.fancybox.min.css">
+        
+        <script src="assets/modernizr/modernizr-custom.min.js"></script>
+        <script src="build/js/jquery-3.2.1.min.js"></script>
+        <script src="build/js/tether.min.js"></script>
+        <script src="build/js/bootstrap.min.js"></script>
+        <script src="build/js/jquery.fancybox.min.js"></script>
         <?php showJsonFromFile('assets/json-head-data.json'); ?>
     </head>
     <body class="is-responsive">
@@ -63,10 +66,10 @@
                 </ul>
             </article>
             <aside class="main-content__gallery row">
-                <div class="col-sm-3"><a href="content/pictures/detail.png" rel="main-content__gallery"><img class="img-responsive img-thumbnail" src="content/pictures/preview.png" alt="sample image"></a></div>
-                <div class="col-sm-3"><a href="content/pictures/detail.png" rel="main-content__gallery"><img class="img-responsive img-thumbnail" src="content/pictures/preview.png" alt="sample image"></a></div>
-                <div class="col-sm-3"><a href="content/pictures/detail.png" rel="main-content__gallery"><img class="img-responsive img-thumbnail" src="content/pictures/preview.png" alt="sample image"></a></div>
-                <div class="col-sm-3"><a href="content/pictures/detail.png" rel="main-content__gallery"><img class="img-responsive img-thumbnail" src="content/pictures/preview.png" alt="sample image"></a></div>
+                <div class="col-sm-3"><a href="content/pictures/detail.png" data-fancybox="gallery"><img class="img-responsive img-thumbnail" src="content/pictures/preview.png" alt="sample image"></a></div>
+                <div class="col-sm-3"><a href="content/pictures/detail.png" data-fancybox="gallery"><img class="img-responsive img-thumbnail" src="content/pictures/preview.png" alt="sample image"></a></div>
+                <div class="col-sm-3"><a href="content/pictures/detail.png" data-fancybox="gallery"><img class="img-responsive img-thumbnail" src="content/pictures/preview.png" alt="sample image"></a></div>
+                <div class="col-sm-3"><a href="content/pictures/detail.png" data-fancybox="gallery"><img class="img-responsive img-thumbnail" src="content/pictures/preview.png" alt="sample image"></a></div>
             </aside>
         </main>
         <footer></footer>
