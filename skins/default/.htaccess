@@ -1,0 +1,7 @@
+# URL rewrites
+## =============
+
+<IfModule mod_rewrite.c>
+    RewriteEngine on
+    RewriteRule index.css index.css.php
+</IfModule>

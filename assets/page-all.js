@@ -12,101 +12,96 @@
  */
 
 /**
- * zakladni volani pri document ready - NEMENIT
+ * Zakladni volani pri document ready - NEMENIT
  */
-$(document).ready(function ()
-{
-    bindDocumentReady()
-    bindByScope()
-    bindResponse()
-})
-
-/**
- * zakladni volani pri window load - NEMENIT
- */
-$(window).load(function ()
-{
-    bindWindowLoad()
+$(document).ready(function() {
+	bindDocumentReady();
+	bindByScope();
+	bindResponse();
 });
 
 /**
- * zakladni volani pri resize - NEMENIT
+ * Zakladni volani pri window load - NEMENIT
  */
-$(window).on('resize', function ()
-{
-    // pokud se neaktualizoval viewport_size_code (nezmenilo se zarizeni),
-    // tak priznak zmeny viewport_size_code_changed nastavime na false
-    var viewport_size_code_checked
-    
-    if (viewport_size_code_checked)
-    {
-        viewport_size_code_checked = false
-    }
-    else
-    {
-        viewport_size_code_changed = false
-    }
-    bindWindowResize()
+$(window).on('load', function() {
+	bindWindowLoad();
 });
 
+/**
+ * Zakladni volani pri resize - NEMENIT
+ * - pokud se neaktualizoval viewport_size_code (nezmenilo se zarizeni), tak priznak zmeny viewport_size_code_changed nastavime na false
+ */
+$(window).on('resize', function() {
+	if (viewport_size_code_checked) {
+		viewport_size_code_checked = false;
+	} else {
+		viewport_size_code_changed = false;
+	}
+	bindWindowResize();
+});
 
 /** 
- * pro responzivni upravy obsahu - NEMENIT
+ * Pro responzivni upravy obsahu - NEMENIT
  */
-function bindResponse()
-{
-    // pro Boostrap 3
-    if ($('body').hasClass('responsive-layout')) {
-        mediaCheck({
-            media: '(max-width: 767px)',
-            entry: function () {
-                setSizeCodeVars('XS')
-                bindResponseXS()
-            }
-        });
-        mediaCheck({
-            media: '(min-width: 768px) and (max-width: 991px)',
-            entry: function () {
-                setSizeCodeVars('SM')
-                bindResponseSM()
-            }
-        });
-        mediaCheck({
-            media: '(min-width: 992px) and (max-width: 1199px)',
-            entry: function () {
-                setSizeCodeVars('MD')
-                bindResponseMD()
-            }
-        });
-        mediaCheck({
-            media: '(min-width: 1200px)',
-            entry: function () {
-                setSizeCodeVars('LG')
-                bindResponseLG()
-            }
-        });
-    }
+function bindResponse() {
+	if ($('body').hasClass('is-responsive')) {
+		mediaCheck({
+			media: '(max-width: 575px)',
+			entry: function() {
+				setSizeCodeVars('XS');
+				bindResponseXS();
+			}
+		});
+		mediaCheck({
+			media: '(min-width: 576px) and (max-width: 767px)',
+			entry: function() {
+				setSizeCodeVars('SM');
+				bindResponseSM();
+			}
+		});
+		mediaCheck({
+			media: '(min-width: 768px) and (max-width: 991px)',
+			entry: function() {
+				setSizeCodeVars('MD');
+				bindResponseMD();
+			}
+		});
+		mediaCheck({
+			media: '(min-width: 992px) and (max-width: 1199px)',
+			entry: function() {
+				setSizeCodeVars('LG');
+				bindResponseLG();
+			}
+		});
+		mediaCheck({
+			media: '(min-width: 1200px)',
+			entry: function() {
+				setSizeCodeVars('XL');
+				bindResponseXL();
+			}
+		});
+	}
 }
 
 /**
- * nastavi promenne s kodem sirky - XS, SM, MD, LG a predchozi kod - NEMENIT
+ * Nastavi promenne s kodem sirky - XS, SM, MD, LG, XL a predchozi kod - NEMENIT
  */
-function setSizeCodeVars(size_code)
-{
-    viewport_size_code_checked = true
-    if (typeof (viewport_size_code) == 'undefined') {
-        viewport_size_code = size_code
-        viewport_size_code_previous = null
-    } else {
-        viewport_size_code_previous = viewport_size_code
-        viewport_size_code = size_code
-    }
-    if (viewport_size_code_previous != viewport_size_code) {
-        viewport_size_code_changed = true
-    } else {
-        viewport_size_code_changed = false
-    }
+function setSizeCodeVars(size_code) {
+	viewport_size_code_checked = true;
+	if (typeof(viewport_size_code) == 'undefined') {
+		viewport_size_code = size_code;
+		viewport_size_code_previous = null;
+	} else {
+		viewport_size_code_previous = viewport_size_code;
+		viewport_size_code = size_code;
+	}
+	if (viewport_size_code_previous != viewport_size_code) {
+		viewport_size_code_changed = true;
+	} else {
+		viewport_size_code_changed = false;
+	}
 }
+
 
 /**
  * FUNKCE NIZE EDITOVAT VIZ KOMENTARE K FUNKCIM 
@@ -117,19 +112,13 @@ function setSizeCodeVars(size_code)
  * zavola se pri document ready a nevola se na vlozene casti kodu ajaxem (k tomu slouzi funkce bindByScope nize)
  * !!! vkladat pouze volani funkci s parametry, nic jineho !!!
  */
-function bindDocumentReady()
-{
-    bind_image_open()
-}
+function bindDocumentReady() {}
 
 /**
  * zavola se na cely dokument po nacteni stranky  + na casti HTML dle scope, ktere se muze vkladat i ajaxem pozdeji do stranky (napr. v shopu kosik nebo formulare)
  * !!! vkladat pouze volani funkci se scope, nic jineho !!!
  */
-function bindByScope(scope)
-{
-    bind_image_open(scope)
-}
+function bindByScope(scope) {}
 
 /**
  * zavola se az po nacteni vseho vcetne obrazku 
@@ -137,46 +126,48 @@ function bindByScope(scope)
  * - zavola se nekdy az po nekolika sekundach, az jsou vsechny obrazky nacteny, nejlepsi se je tomu vyhnout zadanim rozmeru obrazku a pouzitim bindDocumentReady/bindByScope vyse
  * !!! vkladat pouze volani funkci s parametry, nic jineho !!!
  */
-function bindWindowLoad()
-{
-}
+function bindWindowLoad() {}
 
 /**
  * JS volany pri zmene sirky
  */
-function bindWindowResize()
-{
-}
-
+function bindWindowResize() {}
 
 /**
  * zavola se pro extra small displeje
  */
-function bindResponseXS()
-{
+function bindResponseXS() {
+    bindResponseXS();
 }
 
 /**
  * zavola se pro small displeje
  */
-function bindResponseSM()
-{
+function bindResponseSM() {
+    bindResponseSM();
 }
 
 /**
  * zavola se pro middle displeje
  */
-function bindResponseMD()
-{
+function bindResponseMD() {
+    bindResponseMD();
+}
+
+/**
+ * zavola se pro large displeje
+ */
+function bindResponseLG() {
+	bindResponseLG();
 }
 
 /**
  * zavola se pro extra large displeje
  */
-function bindResponseLG()
-{
-    bindResponseMD()
+function bindResponseXL() {
+	bindResponseXL();
 }
+
 
 /**
  * =================================================================================================
@@ -185,69 +176,14 @@ function bindResponseLG()
  * =================================================================================================
  */
 
-/**
- * colorbox / swipebox pro obrazky v clancich
- * - pouziva funkci image_open_js
- */
-function bind_image_open(scope)
-{
-    $('a[href$=".jpg"], a[href$=".jpeg"], a[href$=".png"], a[href$=".gif"]', scope).click(function (event) {
-        image_open_js(this, event);
-    })
-}
-
-
-
-/**
- * otevre obrazek dle zarizeni bud colorbox nebo do urcite sirky (mobil, tablet) pomoci swipeboxu
- * - pouziva se ve funkci bind_image_open
- */
-function image_open_js(obj, event)
-{
-    event.preventDefault()
-    if (typeof gallery_open_image_response_colorbox == 'undefined') {
-        gallery_open_image_response_colorbox = new Array
-        gallery_open_image_response_swipebox = new Array
-    }
-    if (!gallery_open_image_response_swipebox[obj.rel] && ($(window).width() >= 979 || gallery_open_image_response_colorbox[obj.rel])) {
-        gallery_open_image_response_colorbox[obj.rel] = true
-        $('a[rel=' + obj.rel + ']').colorbox({
-            rel: obj.rel,
-            open: true,
-            onOpen: function () {
-            },
-                onClosed: function () {
-            },
-            current: '{current}/{total}',
-            rel:obj.rel,
-            initialWidth: '300',
-            initialHeight: '300',
-            maxWidth: '85%',
-            maxHeight: '85%',
-            opacity: '0.3',
-            scrolling: false
-        });
-    } else {
-        gallery_open_image_response_swipebox[obj.rel] = true
-        $('a[rel=' + obj.rel + ']').swipebox({
-            hideBarsOnMobile: false,
-            hideBarsDelay: 3000,
-            beforeOpen: function () {
-            },
-            afterClose: function () {
-            }
-        })
-    }
-}
-
 
 /**
  * funkce na zpozdeni scriptu
  */
-var delay = (function () {
-    var timer = 0;
-    return function (callback, ms) {
-        clearTimeout(timer);
-        timer = setTimeout(callback, ms);
-    };
+var delay = (function() {
+	var timer = 0;
+	return function(callback, ms) {
+		clearTimeout(timer);
+		timer = setTimeout(callback, ms);
+	};
 })();

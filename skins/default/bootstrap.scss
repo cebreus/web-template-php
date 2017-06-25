@@ -1,0 +1,54 @@
+/*!
+ * Bootstrap v4.0.0-alpha.6 (https://getbootstrap.com)
+ * Copyright 2011-2017 The Bootstrap Authors
+ * Copyright 2011-2017 Twitter, Inc.
+ * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+ */
+
+// Core variables and mixins
+@import "variables";
+@import "#{$vendorPath}/mixins";
+@import "custom";
+
+// Reset and dependencies
+@import "#{$vendorPath}/normalize";
+@import "#{$vendorPath}/print";
+
+// Core CSS
+@import "#{$vendorPath}/reboot";
+@import "#{$vendorPath}/type";
+@import "#{$vendorPath}/images";
+@import "#{$vendorPath}/code";
+@import "#{$vendorPath}/grid";
+@import "#{$vendorPath}/tables";
+@import "#{$vendorPath}/forms";
+@import "#{$vendorPath}/buttons";
+
+// Components
+@import "#{$vendorPath}/transitions";
+@import "#{$vendorPath}/dropdown";
+@import "#{$vendorPath}/button-group";
+@import "#{$vendorPath}/input-group";
+@import "#{$vendorPath}/custom-forms";
+@import "#{$vendorPath}/nav";
+@import "#{$vendorPath}/navbar";
+@import "#{$vendorPath}/card";
+@import "#{$vendorPath}/breadcrumb";
+@import "#{$vendorPath}/pagination";
+@import "#{$vendorPath}/badge";
+@import "#{$vendorPath}/jumbotron";
+@import "#{$vendorPath}/alert";
+@import "#{$vendorPath}/progress";
+@import "#{$vendorPath}/media";
+@import "#{$vendorPath}/list-group";
+@import "#{$vendorPath}/responsive-embed";
+@import "#{$vendorPath}/close";
+
+// Components w/ JavaScript
+@import "#{$vendorPath}/modal";
+@import "#{$vendorPath}/tooltip";
+@import "#{$vendorPath}/popover";
+@import "#{$vendorPath}/carousel";
+
+// Utility classes
+@import "#{$vendorPath}/utilities";

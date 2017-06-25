@@ -1,29 +1,13 @@
 <?php
 
 /*
- * GOOGLE ANALYTICK TRACKING CODE
- */
-
-function showAalyticsTracking($id = '')
-{
-    if (!empty($id))
-    {
-        echo "<script>";
-        echo "(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','//www.google-analytics.com/analytics.js','ga');";
-        echo "ga('create', '".$id."', 'auto');";
-        echo "ga('send', 'pageview');";
-        echo "</script>";
-    }
-}
-
-
-
-/*
- * TEST JESTLI JSEM NA PRODUKČNÍM SERVERU
+ * AM I ON PRODUCTION SERVER?
  * note: nutno zkontrolovat nastavení proměnné $projectDomain, aby odpovídala ostré doméně
+ * @param: string
+ * @return: boolean
  */
 
-function isProduction($projectDomain) 
+function isProduction($projectDomain)
 {
     return $_SERVER['HTTP_HOST'] == $projectDomain;
 }
@@ -31,9 +15,11 @@ function isProduction($projectDomain)
 
 /*
  * SANITIZE HTML OUTPUT
+ * @param: string
+ * @return: string
  */
 
-function sanitize_output($buffer)
+function sanitizeOutput($buffer)
 {
     // BASIC SANITIZE BASIC STRING REPLACE (true) × REPLACE ON AROUND ELEMENTS (false)
     $basic = false;
@@ -57,26 +43,139 @@ function sanitize_output($buffer)
     }
     else
     {
-        $baseElements = Array('html', 'head', 'body', 'title', 'meta', 'link', 'script');
-        $blockElements = Array('article', 'aside', 'details', 'figcaption', 'figure', 'footer', 'header', 'hgroup', 'main', 'menu', 'nav', 'section', 'summary', 'audio', 'canvas', 'progress', 'video');
-        $contentElements = Array('html', 'head', 'body', 'title', 'meta', 'link', 'script', 'div', 'p', 'ul', 'ol', 'h[\d]', 'option', 'optgroup');
+        $baseElements     = Array('html', 'head', 'body', 'title', 'meta', 'link', 'script', 'noscript', 'style');
+        $semanticElements = Array('article', 'aside', 'details', 'figcaption', 'figure', 'footer', 'header', 'hgroup', 'main', 'menu', 'nav', 'section', 'summary', 'audio', 'canvas', 'progress', 'video');
+        $contentElements  = Array('div', 'table', 'thead', 'tbody', 'tfoot', 'colgroup', 'caption', 'tr', 'th', 'td', 'form', 'label', 'legend', 'textarea', 'button', 'option', 'optgroup', 'blockquote', 'h[\d]', 'p', 'svg', 'object', 'embed', 'ol', 'ul', 'li');
+        $inlineElements   = Array('a', 'span', 'strong', 'em', 'b', 'i');
+        
+        $buffer = preg_replace('/<!--(.*)-->/Uis', '', $buffer);
         
         foreach($baseElements as $to_replace) {
-            $buffer = preg_replace('/\s+(<[\/]?'.$to_replace.')/', '\\1', $buffer);
+            $buffer = preg_replace('/\s+(<[\/]?'.$to_replace.')/Uis', '\\1', $buffer);
         }
-        foreach($blockElements as $to_replace) {
+        foreach($semanticElements as $to_replace) {
             $buffer = preg_replace('/\s+(<[\/]?'.$to_replace.')/', '\\1', $buffer);
         }
         foreach($contentElements as $to_replace) {
+            // zacatek tagu
+            $buffer = preg_replace('/(<'.$to_replace.' *[^\/]*?>)\s+/', '\\1', $buffer);
+            // konectagu
             $buffer = preg_replace('/\s+(<[\/]?'.$to_replace.')/', '\\1', $buffer);
+            
+        }
+        foreach($inlineElements as $to_replace) {
+            // one space before tag
+            $buffer = preg_replace('/\s+(<'.$to_replace.')/i', ' \\1', $buffer);
+            // sibling tags
+            $buffer = preg_replace('/([A-Z0-9]>)\s+(<[\/]?'.$to_replace.')/i', '\\1 \\2', $buffer);
         }
         
-        $buffer = preg_replace('/<!--(.*)-->/Uis', '', $buffer);
+        $buffer = preg_replace('/\s*(<br>|<hr>)\s*/', '\\1', $buffer);
+        
     }
     
     return $buffer;
 }
 
+
+/*
+ * BEAUTIFY HTML CODE
+ * @param: string
+ * @return: string
+ */
+
+function beautifyOutput($buffer)
+{
+    include_once("vendor/dindent/Indenter.php");
+    $indenter = new \Gajus\Dindent\Indenter();
+    $buffer = $indenter->indent($buffer);
+    $buffer = preg_replace('/(<h\d[^>]*>)[\s]+(.*?)[\s]+(<\/h\d>)/u', '\\1\\2\\3', $buffer);
+    
+    return $buffer;
+}
+
+
+/*
+ * ENCODING TO UTF-8
+ * @param: string
+ * @return: string
+ */
+
+function autoUTF($data)
+{
+    // detect UTF-8
+    if (preg_match('#[\x80-\x{1FF}\x{2000}-\x{3FFF}]#u', $data)) {
+        return $data;
+    }
+    
+    // detect WINDOWS-1250
+    if (preg_match('#[\x7F-\x9F\xBC]#', $data)) {
+        return iconv('WINDOWS-1250', 'UTF-8', $data);
+    }
+    
+    // assume ISO-8859-2
+    return iconv('ISO-8859-2', 'UTF-8', $data);
+}
+
+
+/**
+ * Normalize Lines
+ *
+ * Normalize and convert newline characters to UNIX (by default) or
+ * Windows and collapse lines containing two or more adjacent empty lines
+ * into one empty line.
+ *
+ * @param  string  $str     The string of lines to normalize.
+ * @param  boolean $windows Set as `true` to convert line endings to
+ *                          Windows. The default value is `false`, and  
+ *                          UNIX line endings will be used.
+ *
+ * @return string The normalized lines.
+ */
+
+function normalizeLines($str, $windows = true)
+{
+    $str = str_replace("\r\n", "\n", $str);
+    $str = str_replace("\r", "\n", $str);
+    $str = preg_replace("/\n{2,}/", "\n\n", $str);
+   
+    if ($windows === true) {
+      $str = str_replace("\n", "\r\n", $str);
+    }
+     
+    return $str;
+}
+
+
+/**
+ * BASIC TEXT CORRECTIONS
+ * @param: string $input
+ * @return: string $output
+ */
+
+function basicTextCorrections($input)
+{
+    $prepositionsNonbreak = Array('K', 'k', 'S', 's', 'V', 'v', 'Z', 'z', 'O', 'o', 'U', 'u', 'A', 'a', 'I', 'i', 'sv.');
+    
+    foreach($prepositionsNonbreak as $to_replace)
+    {
+        $output = preg_replace("/([ ,.;:!?>])(".$to_replace.")[ ]+/", "\\1\\2&nbsp;", $input);
+    }
+    
+    // radove cislovky
+    $output = preg_replace("/( \d{1,}.) (\D)/", "\\1&nbsp;\\2", $output);
+    
+    // rimsle cislice
+    $output = preg_replace("/(\D) (^M{0,4}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})$.)/", "\\1&nbsp;\\2", $output);
+    
+    // pomlcky
+    $output = preg_replace("/ (–|—)/", "&nbsp;\\1", $output);
+
+    // speciality
+    $output = preg_replace("/(mimi) (fortunae)/i", "\\1&nbsp;\\2", $output);
+    
+    return $output;
+}
 
 
 /*
@@ -94,262 +193,174 @@ function showJsonFromFile($file = '')
 }
 
 
-
 /*
- * BEAUTIFY HTML CODE
+ * GOOGLE ANALYTICK TRACKING CODE
  */
 
-function beautify_output($buffer)
+function showAalyticsTracking($id = '')
 {
-    include ("vendor/dindent/Indenter.php");
-    $indenter = new \Gajus\Dindent\Indenter();
-    $buffer = $indenter->indent($buffer);
-    $buffer = preg_replace('/(<h\d[^>]*>)[\s]+(.*?)[\s]+(<\/h\d>)/u', '\\1\\2\\3', $buffer);
-    
-    return $buffer;
-}
-
-
-
-/*
- * ENCODING TO UTF-8
- */
-
-function autoUTF($s)
-{
-    // detect UTF-8
-    if (preg_match('#[\x80-\x{1FF}\x{2000}-\x{3FFF}]#u', $s)) {
-        return $s;
-    }
-    
-    // detect WINDOWS-1250
-    if (preg_match('#[\x7F-\x9F\xBC]#', $s)) {
-        return iconv('WINDOWS-1250', 'UTF-8', $s);
-    }
-    
-    // assume ISO-8859-2
-    return iconv('ISO-8859-2', 'UTF-8', $s);
-}
-
-
-
-/*
- * INICIALIZACE LESS KONVERTORU
- */
-
-use ILess\Parser;
-use ILess\FunctionRegistry;
-use ILess\Node\ColorNode;
-use ILess\Node\DimensionNode;
-use ILess\Cache\FileSystemCache;
-
-
-
-/*
- * COMPILE LESS FILES AND WRITE INTO FILES
- */
-
-function genCssFiles($files)
-{
-    $filePathLess = $GLOBALS['baseProductionPath'].'/skins/'.$GLOBALS['skin'].'/less';
-    
-    foreach ($files as $file)
+    if (!empty($id))
     {
-        require_once ('vendor/ILess/Autoloader.php');
-        ILess\Autoloader::register();
-        
-        $parser = new Parser(array(/*'compress' => false*/), new FileSystemCache([
-            'cache_dir' => getcwd() . '/.cache+tmp/iless-cache',
-            'ttl' => 86400 // the lifetime of cached files in seconds (1 day by default)
-        ]) );
-        
-        $parser->parseFile($filePathLess.'/'.$file.'.less');
-        
-        // CONVERT TO UTF-8
-        $fileContent = autoUTF($parser->getCSS());
-        
-        // WRITE FILES
-        writeCssFiles($fileContent, $file, null);
+        echo "<script>";
+        echo "(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','//www.google-analytics.com/analytics.js','ga');";
+        echo "ga('create', '".$id."', 'auto');";
+        echo "ga('send', 'pageview');";
+        echo "</script>";
     }
-    
-    return $files;
 }
 
 
-
-/*
- * WRITE PRODUCTION/DEVELOPMENT CSS FILES
+/**
+ * FILESIZE FORMATER
+ * @param string $path to file
  */
 
-function writeCssFiles($content = '', $outputFile = '', $showInfo = false)
+function filesizeFormatted($path)
 {
-    // DEVELOPMENT FILES
+    $size = filesize($path);
+    $units = array( 'B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB');
+    $power = $size > 0 ? floor(log($size, 1024)) : 0;
+    return number_format($size / pow(1024, $power), 2, ',', ',') . ' ' . $units[$power];
+}
+
+
+/**
+ * WRITE FILES
+ * @param string $outputPath
+ * @param string $outputFileName
+ * @param string $content
+ */
+
+function writeFile($outputPath, $outputFileName, $content, $filemtime = '')
+{
+    $outputFile = $outputPath.$outputFileName;
+    $inputFileTime = empty($filemtime) ? '' : $filemtime;
+    $outputFileTime = is_file($outputFile) ?  filemtime($outputFile) : '';
     
-    $developmentFolder = $GLOBALS['baseProductionPath'].'/.cache+tmp';
-    $developmentOutputFile = $developmentFolder.'/'.$outputFile.'-'.$GLOBALS['skin'].'.css';
-    $fileToWrite = fopen($developmentOutputFile, "w+");
-    
-    if (!is_dir($developmentFolder)) {
-        mkdir($developmentFolder);
+    if (!empty($outputPath) && !is_dir($outputPath)) {
+        mkdir($outputPath, 0777, true);
     }
     
-    if ($showInfo)
+    if (strlen($content) <= 0)
     {
-        echo PHP_EOL;
-        if(!$fileToWrite) {
-            die("Nelze vytvořit / otevřít soubor pro zápis."); 
-        }
-        elseif(fputs($fileToWrite, $content) === false)
+        //echo getChip('Nelze generovat soubor  '.$outputPath.'/<strong>'.$outputFileName.'</strong>.<br>Prázná vstupní data!', 'error');
+        echo '<script nonce="SomeRandomNonce">console.error("Prázná vstupní data pro soubor https://'.$_SERVER['HTTP_HOST'].'/'.$outputPath.$outputFileName.'.")</script>';
+        
+        if (is_file($outputFile))
         {
-            die("Do souboru nelze zapisovat.");
+            //echo '<script nonce="SomeRandomNonce">console.info("Soubor https://'.$_SERVER['HTTP_HOST'].'/'.$outputPath.$outputFileName.' je aktuální. Vytvořen: '.date('j.n.Y H:i:s', filemtime($outputFile)).'; velikost: '.filesizeFormatted($outputFile).'")</script>';
+        }
+    }
+    else
+    {
+        if (!is_file($outputFile) || $outputFileTime < $inputFileTime)
+        {
+            $fp = fopen($outputFile, "w+"); // read + write, rewrite all content of file
+            fputs($fp, $content);
+            fclose($fp);
+            echo '<script nonce="SomeRandomNonce">console.info("Soubor https://'.$_SERVER['HTTP_HOST'].'/'.$outputPath.$outputFileName.' je vytvořen.")</script>';
+            
+        }
+        elseif(!is_file($outputFile))
+        {
+            echo '<script nonce="SomeRandomNonce">console.error("Soubor https://'.$_SERVER['HTTP_HOST'].'/'.$outputPath.$outputFileName.' nelze vytvořit!")</script>';
+        }
+        elseif (!is_writable($outputFile))
+        {
+            echo '<script nonce="SomeRandomNonce">console.error("Soubor https://'.$_SERVER['HTTP_HOST'].'/'.$outputPath.$outputFileName.' nelze zapisovat!")</script>';
+        }
+        
+        elseif (filesize($outputFile) <= 0)
+        {
+            echo '<script nonce="SomeRandomNonce">console.error("Soubor https://'.$_SERVER['HTTP_HOST'].'/'.$outputPath.$outputFileName.' je prázdný!")</script>';
         }
         else
         {
-            echo 'Soubor '.$developmentOutputFile.' byl vytvořen.';
-        }
-    }
-    else
-    {
-        fputs($fileToWrite, $content);
-    }
-    
-    fclose($fileToWrite);
-    
-    
-    // PRODUCTION FILES
-    
-    require_once('vendor/cssmin-3.0.1/cssmin.inc');
-    
-    $productionFolder = $GLOBALS['baseProductionPath'].'/build/css';
-    $productionOutputFile = $productionFolder.'/'.$outputFile.'-'.$GLOBALS['skin'].'.min.css';
-    $content = CssMin::minify($content);
-    $fileToWrite = fopen($productionOutputFile, "w+");
-    
-    if (!is_dir($productionFolder)) {
-        mkdir($productionFolder, 0777, true);
-    }
-    
-    if ($showInfo)
-    {
-        echo PHP_EOL;
-        if(!$fileToWrite) {
-            die("Nelze vytvořit / otevřít soubor pro zápis."); 
-        }
-        elseif(fputs($fileToWrite, $content) === false)
-        {
-            die("Do souboru nelze zapisovat."); 
-        }
-        else
-        {
-            echo 'Byl vytvořen soubor:  '.$productionOutputFile; 
-        }
-        echo PHP_EOL;
-    }
-    else
-    {
-        fputs($fileToWrite, $content);
-    }
-    
-    fclose($fileToWrite);
-}
-
-
-
-/*
- * RENDER <LINK> TAG WITH HREF TO PRODUCTION/DEVELOPMENT CSS FILES
- */
-
-function showHeadCssLinks($fileArray)
-{
-    if (is_array($fileArray)) {
-        foreach ($fileArray as $file)
-        {
-            $file = $file.'-'.$GLOBALS['skin'];
-            
-            $developmentOutputFile = $GLOBALS['baseProductionPath'].'/.cache+tmp/'.$file.'.css';
-            $productionOutputFile  = $GLOBALS['baseProductionPath'].'/build/css/'.$file.'.min.css';
-            
-            if (!isProduction($GLOBALS['projectDomain']))
-            {
-                if (file_exists($developmentOutputFile)) {
-                    echo '        <link rel="stylesheet" href=".cache+tmp/'.$file.'.css">'.PHP_EOL;
-                } else {
-                    echo '        <!--  nelze načíst soubor:   .cache+tmp/'.$file.'.css  -->'.PHP_EOL;
-                }
-            }
-            if (isProduction($GLOBALS['projectDomain']))
-            {
-                if (file_exists($productionOutputFile)) {
-                    echo '        <link rel="stylesheet" href="build/css/'.$file.'.min.css">'.PHP_EOL;
-                } else {
-                    echo '        <!--  nelze načíst soubor:   build/css/'.$file.'.min.css  -->'.PHP_EOL;
-                }
-            }
+            //echo '<script nonce="SomeRandomNonce">console.info("Soubor https://'.$_SERVER['HTTP_HOST'].'/'.$outputPath.$outputFileName.' je aktuální. Vytvořen: '.date('j.n.Y H:i:s', filemtime($outputFile)).'; velikost: '.filesizeFormatted($outputFile).'")</script>';
         }
     }
 }
 
 
-
-/*
- * RENDER <SCRIPT> TAG WITH HREF TO PRODUCTION/DEVELOPMENT FILES
+/**
+ * Copy files
+ * @param string $outputPath
+ * @param string $outputFileName
+ * @param string $content
  */
 
-function showScriptLinks($fileArray, $outputFile = '', $async = false)
+function copyFile($inputFile, $outputFile, $filemtime = '')
 {
-    require_once('vendor/magic-minifier-3.0.4/class.magic-min.php' );
-    //Initialize the class with image encoding, gzip, a timer, and use the google closure API
-    $vars = array( 
-        'encode' => false, 
-        'timer' => false, 
-        'gzip' => true, 
-        'closure' => true, 
-        'remove_comments' => true, 
-        'force_rebuild' => false, //USE THIS SPARINGLY!
-        'hashed_filenames' => false,
-    );
-    $minified = new Minifier($vars);
+    $inputFileTime = is_file($inputFile) ?  filemtime($inputFile) : '';
+    $outputFileTime = is_file($outputFile) ?  filemtime($outputFile) : '';
     
-    if ($async) {
-        $asyncCode = ' async=""';
-    }
-    
-    if (is_array($fileArray))
+    if (!is_file($outputFile) || $outputFileTime < $inputFileTime)
     {
-        if (!isProduction($GLOBALS['projectDomain']))
-        {
-            foreach ($fileArray as $file)
-            {
-                if (file_exists($file)) {
-                    echo '        <script src="'.$file.'"'.$asyncCode.'></script>'.PHP_EOL;
-                } else {
-                    echo '        <!--  nelze načíst soubor:   '.$file.'  -->'.PHP_EOL;
-                }
-            }
-        }
-        if (isProduction($GLOBALS['projectDomain']))
-        {
-            echo '        <script src="';
-            echo $minified->merge('build/js/'.$outputFile.'.min.js', 'js', $fileArray);
-            echo '"'.$asyncCode.'></script>'.PHP_EOL;
-        }
+        copy($inputFile, $outputFile);
+        //echo '"Soubor https://'.$_SERVER['HTTP_HOST'].'/'.$inputFile.' zkopírován do \n       https://'.$_SERVER['HTTP_HOST'].'/'.$outputFile.'")</script>';
+        echo '<div class="mdl-color-text--green">Soubor <strong>'.$inputFile.'</strong> zkopírován do <strong>'.$outputFile.'</strong></div>';
+        
     }
-    else
+}
+
+
+/**
+ * Return date of last moddifies file
+ * @param string $inputPath
+ */
+
+function getLastModFileTime($inputPaths)
+{
+    $lastMod = 0;
+    $lastModFile = '';
+    foreach ($inputPaths as $inputPath)
     {
-        if (!isProduction($GLOBALS['projectDomain']))
-        {
-            if (file_exists($GLOBALS['baseProductionPath'].'/'.$file)) {
-                echo '        <script src="'.$fileArray.'"'.$asyncCode.'></script>'.PHP_EOL;
-            } else {
-                echo '        <!--  nelze načíst soubor:   '.$fileArray.'  -->'.PHP_EOL;
-            }
-        }
-        if (isProduction($GLOBALS['projectDomain']))
-        {
-            $fileArray = array($fileArray);
-            echo '        <script src="';
-            echo $minified->merge('build/js/'.$outputFile.'.min.js', 'js', $fileArray);
-            echo '"'.$asyncCode.'></script>'.PHP_EOL;
+        if (is_file($inputPath) && filectime($inputPath) > $lastMod) {
+            $lastMod = filectime($inputPath);
+            $lastModFile = $inputPath;
         }
     }
+    return ["file" => $lastModFile, "date" => $lastMod ];
+}
+
+
+/**
+ * Recursively delete files
+ * @param string $dir
+ */
+
+function deleteFile($filePath)
+{
+    if (is_array($filePath))
+    {
+        foreach ($filePath as $item) {
+            file_exists($item) ? unlink($item) : null;
+        }
+    }
+    elseif (file_exists($filePath))
+    {
+        unlink($filePath);
+    }
+}
+
+
+/**
+ * Recursively delete folder
+ * @param string $dir
+ */
+
+function deleteDirectory($dir)
+{
+    if (!file_exists($dir)) { return true; }
+    if (!is_dir($dir) || is_link($dir)) {
+        return unlink($dir);
+    }
+    foreach (scandir($dir) as $item) {
+        if ($item == '.' || $item == '..') { continue; }
+        if (!deleteDirectory($dir . "/" . $item, false)) {
+            chmod($dir . "/" . $item, 0777);
+            if (!deleteDirectory($dir . "/" . $item, false)) return false;
+        };
+    }
+    return rmdir($dir);
 }

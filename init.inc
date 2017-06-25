@@ -1,13 +1,19 @@
 <?php
 
-// PRODUCTION DOMAIN
-$projectDomain = '';
-//$projectDomain = 'iless.cebreus.eu';
+$siteName = 'Název projektu';
+$siteDescription = 'Popis projektu';
+$siteKeywords = '';
+$siteAuthor = 'Autor projektu';
 
-// PATH TO PROJECT ON PRODUCTION SERVER
-$baseProductionPath = '/data/web/virtuals/87664/virtual/www/subdom/iless';
+$pageThemeColor = '#ff0000';
+$pageIcon = 'project';
+$pageIconPath = '/assets/icons';
+
+// PRODUCTION DOMAIN
+$siteDomain = '';
+$siteDomain = 'default-web.cebre.us';
+$siteDomain = 'default-web';
 
 // SKIN NAME
-$skin = 'bootstrap-4';
-//$skin = 'bootstrap-cebreus';
-//$skin = 'bootstrap-default';
+$skin = 'default';
+$skinPath = 'skins/'.$skin;
