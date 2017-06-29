@@ -163,7 +163,7 @@ function basicTextCorrections($input)
     }
     
     // radove cislovky
-    $output = preg_replace("/( \d{1,}.) (\D)/", "\\1&nbsp;\\2", $output);
+    $output = preg_replace("/( \d{1,}[.]) (\D)/", "\\1&nbsp;\\2", $output);
     
     // rimsle cislice
     $output = preg_replace("/(\D) (^M{0,4}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})$.)/", "\\1&nbsp;\\2", $output);
@@ -172,7 +172,8 @@ function basicTextCorrections($input)
     $output = preg_replace("/ (–|—)/", "&nbsp;\\1", $output);
 
     // speciality
-    $output = preg_replace("/(mimi) (fortunae)/i", "\\1&nbsp;\\2", $output);
+    $output = preg_replace("/´(s)/i", "’\\1", $output);
+    $output = preg_replace("/([[:alpha:]][.]) ([[:alpha:]][.])/", "\\1&nbsp;\\2", $output);
     
     return $output;
 }

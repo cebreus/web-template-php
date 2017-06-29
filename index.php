@@ -6,7 +6,7 @@
     require_once 'init.inc';
     require_once 'functions.inc';
     
-    (isProduction($siteDomain)) ? ob_start('sanitizeOutput') : ob_start(ob_start("beautify_output"));
+    (isProduction($siteDomain)) ? ob_start('sanitizeOutput') : ob_start('beautifyOutput');
     
     $pageName = 'Úvodní stránka';
     $pageDescription = 'Popis stránky';
@@ -46,11 +46,14 @@
         <link rel="stylesheet" href="<?php echo $skinPath.'/index.css'; ?>">
         <link rel="stylesheet" href="build/css/jquery.fancybox.min.css">
         
-        <script src="assets/modernizr/modernizr-custom.min.js"></script>
+        <script src="build/js/modernizr-custom.min.js"></script>
         <script src="build/js/jquery-3.2.1.min.js"></script>
         <script src="build/js/tether.min.js"></script>
         <script src="build/js/bootstrap.min.js"></script>
         <script src="build/js/jquery.fancybox.min.js"></script>
+        <script src="build/js/lazysizes.min.js"></script>
+        <script src="build/js/mediaCheck.min.js"></script>
+        <script src="assets/page-all.js"></script>
         <?php showJsonFromFile('assets/json-head-data.json'); ?>
     </head>
     <body class="is-responsive">

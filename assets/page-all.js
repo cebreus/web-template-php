@@ -12,7 +12,8 @@
  */
 
 /**
- * Zakladni volani pri document ready - NEMENIT
+ * Zakladni volani pri document ready
+ * - NEMENIT
  */
 $(document).ready(function() {
 	bindDocumentReady();
@@ -21,15 +22,18 @@ $(document).ready(function() {
 });
 
 /**
- * Zakladni volani pri window load - NEMENIT
+ * Zakladni volani pri window load
+ * - NEMENIT
  */
 $(window).on('load', function() {
 	bindWindowLoad();
 });
 
 /**
- * Zakladni volani pri resize - NEMENIT
- * - pokud se neaktualizoval viewport_size_code (nezmenilo se zarizeni), tak priznak zmeny viewport_size_code_changed nastavime na false
+ * Zakladni volani pri resize
+ * - pokud se neaktualizoval viewport_size_code (nezmenilo se zarizeni),
+ *   tak priznak zmeny viewport_size_code_changed nastavime na false
+ * - NEMENIT
  */
 $(window).on('resize', function() {
 	if (viewport_size_code_checked) {
@@ -41,7 +45,8 @@ $(window).on('resize', function() {
 });
 
 /** 
- * Pro responzivni upravy obsahu - NEMENIT
+ * Pro responzivni upravy obsahu
+ * - NEMENIT
  */
 function bindResponse() {
 	if ($('body').hasClass('is-responsive')) {
@@ -84,7 +89,9 @@ function bindResponse() {
 }
 
 /**
- * Nastavi promenne s kodem sirky - XS, SM, MD, LG, XL a predchozi kod - NEMENIT
+ * Nastavi promenne s kodem sirky
+ * - XS, SM, MD, LG, XL a predchozi kod
+ * - NEMENIT
  */
 function setSizeCodeVars(size_code) {
 	viewport_size_code_checked = true;
@@ -103,22 +110,26 @@ function setSizeCodeVars(size_code) {
 }
 
 
-/**
+/* =============
  * FUNKCE NIZE EDITOVAT VIZ KOMENTARE K FUNKCIM 
- * =================================================================================================
+ * =============
  */
 
 /**
  * zavola se pri document ready a nevola se na vlozene casti kodu ajaxem (k tomu slouzi funkce bindByScope nize)
  * !!! vkladat pouze volani funkci s parametry, nic jineho !!!
  */
-function bindDocumentReady() {}
+function bindDocumentReady() {
+    
+}
 
 /**
  * zavola se na cely dokument po nacteni stranky  + na casti HTML dle scope, ktere se muze vkladat i ajaxem pozdeji do stranky (napr. v shopu kosik nebo formulare)
  * !!! vkladat pouze volani funkci se scope, nic jineho !!!
  */
-function bindByScope(scope) {}
+function bindByScope(scope) {
+    
+}
 
 /**
  * zavola se az po nacteni vseho vcetne obrazku 
@@ -126,56 +137,57 @@ function bindByScope(scope) {}
  * - zavola se nekdy az po nekolika sekundach, az jsou vsechny obrazky nacteny, nejlepsi se je tomu vyhnout zadanim rozmeru obrazku a pouzitim bindDocumentReady/bindByScope vyse
  * !!! vkladat pouze volani funkci s parametry, nic jineho !!!
  */
-function bindWindowLoad() {}
+function bindWindowLoad() {
+    
+}
 
 /**
  * JS volany pri zmene sirky
  */
-function bindWindowResize() {}
+function bindWindowResize() {
+}
 
 /**
  * zavola se pro extra small displeje
  */
 function bindResponseXS() {
-    bindResponseXS();
+    
 }
 
 /**
  * zavola se pro small displeje
  */
 function bindResponseSM() {
-    bindResponseSM();
+    
 }
 
 /**
  * zavola se pro middle displeje
  */
 function bindResponseMD() {
-    bindResponseMD();
+    
 }
 
 /**
  * zavola se pro large displeje
  */
 function bindResponseLG() {
-	bindResponseLG();
+	
 }
 
 /**
  * zavola se pro extra large displeje
  */
 function bindResponseXL() {
-	bindResponseXL();
+	
 }
 
 
-/**
- * =================================================================================================
+/* =============
  * funkce volane z hlavnich funkci bindXXX
  * !!! na kazdou funcionalitu samostatnou funkci, nedelat spagetovy kod, nelepit vic veci do jedne funkce !!!
- * =================================================================================================
+ * =============
  */
-
 
 /**
  * funkce na zpozdeni scriptu
