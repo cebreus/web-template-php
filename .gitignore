@@ -1,5 +1,4 @@
 .tmp/
-build/css/
-build/fonts/
-build/js/
+_bkp/
+build/
 content/
