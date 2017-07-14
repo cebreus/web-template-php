@@ -46,14 +46,18 @@
         <link rel="stylesheet" href="<?php echo $skinPath.'/index.css'; ?>">
         <link rel="stylesheet" href="build/css/jquery.fancybox.min.css">
         
-        <script src="build/js/modernizr-custom.min.js"></script>
-        <script src="build/js/jquery-3.2.1.min.js"></script>
-        <script src="build/js/tether.min.js"></script>
-        <script src="build/js/bootstrap.min.js"></script>
-        <script src="build/js/jquery.fancybox.min.js"></script>
-        <script src="build/js/lazysizes.min.js"></script>
-        <script src="build/js/mediaCheck.min.js"></script>
-        <script src="assets/page-all.js"></script>
+        <?php
+            showScriptLinks([
+                'build/js/modernizr-custom.min.js',
+                'build/js/jquery-3.2.1.min.js',
+                'build/js/tether.min.js',
+                'build/js/bootstrap.min.js',
+                'build/js/jquery.fancybox.min.js',
+                'build/js/lazysizes.min.js',
+                'build/js/mediaCheck.min.js',
+                'assets/page-all.js',
+            ], 'head.js');
+        ?>
         <?php showJsonFromFile('assets/json-head-data.json'); ?>
     </head>
     <body class="is-responsive">

@@ -178,6 +178,66 @@ function basicTextCorrections($input)
     return $output;
 }
 
+/*
+ * RENDER <SCRIPT> TAG WITH HREF TO PRODUCTION/DEVELOPMENT FILES
+ */
+
+function showScriptLinks($inputFileOrArray, $outputFile = '')
+{
+    require_once('vendor/magic-minifier-3.0.4/class.magic-min.php' );
+    
+    $vars = array('echo' => false, 'gzip' => true, 'closure' => true, 'remove_comments' => true);
+    $minified = new Minifier($vars);
+    $buildDir = 'build/js';
+    $inputType = 'js';
+    
+    if (!file_exists($buildDir)) {
+        mkdir($buildDir, 0777, true);
+    }
+    
+    if (is_array($inputFileOrArray)) {
+        $outputFileNameAndLocation = $buildDir.'/'.$outputFile;
+        $include_only = $inputFileOrArray;
+    } else {
+        $outputFileNameAndLocation = $buildDir.'/'.basename($inputFileOrArray);
+        $include_only = array($inputFileOrArray);
+    }
+    
+    if (isProduction($GLOBALS['siteDomain']))
+    {
+        echo '<script src="';
+        echo str_replace('.php', '', $minified->merge($outputFileNameAndLocation, $inputType, $include_only));
+        echo '"></script>';
+    }
+    elseif (is_array($inputFileOrArray))
+    {
+        $i = 0;
+        $len = count($inputFileOrArray);
+        foreach ($inputFileOrArray as $file)
+        {
+            if (file_exists($file)) {
+                // obaleni pro JS pole
+                if ($i != 0) {
+                    echo '"';
+                }
+                echo $file;
+                if ($i != $len - 1) {
+                    echo '", ';
+                }
+            } else {
+                echo '<!--  nelze načíst soubor:   '.$file.'  -->'.PHP_EOL;
+            }
+            $i++;
+        }
+    }
+    else
+    {
+        echo $inputFileOrArray;
+    }
+    
+    //$minified->logs();
+}
+
 
 /*
  * SANITIZE JSON
