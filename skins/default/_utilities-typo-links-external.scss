@@ -1,0 +1,22 @@
+a {
+    &[href^="http"],
+    &[href^="mailto"],
+    &[href^="tel"]{
+        padding-right: 1.3em;
+        background-position: right center;
+        background-repeat: no-repeat;
+        background-size: 1em;
+    }
+    
+    &[href^="http"] {
+        background-image: url("#{$skinImagePath}/sys-link-out.svg#{$file-version}");
+    }
+    
+    &[href^="mailto"] {
+        background-image: url("#{$skinImagePath}/sys-link-mail.svg#{$file-version}");
+    }
+    
+    &[href^="tel"] {
+        background-image: url("#{$skinImagePath}/sys-link-tel.svg#{$file-version}");
+    }
+}
