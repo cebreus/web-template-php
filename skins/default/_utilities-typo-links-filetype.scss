@@ -1,0 +1,154 @@
+@mixin link-file-base-css {
+    margin-right: .2em;
+    padding-right: 1.2em;
+    background-position: right center;
+    background-repeat: no-repeat;
+    background-size: .85em;
+}
+
+a:not(.btn) {
+    // AUDIO
+    &[href$=".3gp"],
+    &[href$=".aac"],
+    &[href$=".flac"],
+    &[href$=".m4a"],
+    &[href$=".mp3"],
+    &[href$=".ogg"],
+    &[href$=".oga"],
+    &[href$=".wav"],
+    &[href$=".wma"] {
+        @include link-file-base-css;
+        background-image: url("#{$skinImagePath}/filetypes/audio.svg#{$file-version}");
+    }
+    
+    // VIDEO
+    &[href$=".3g2"],
+    &[href$=".avi"],
+    &[href$=".asf"],
+    &[href$=".flv"],
+    &[href$=".mkv"],
+    &[href$=".m2v"],
+    &[href$=".m4p"],
+    &[href$=".m4v"],
+    &[href$=".mp4"],
+    &[href$=".mpg"],
+    &[href$=".mpeg"],
+    &[href$=".mov"],
+    &[href$=".ogv"],
+    &[href$=".ogg"],
+    &[href$=".rm"],
+    &[href$=".wmv"] {
+        @include link-file-base-css;
+        background-image: url("#{$skinImagePath}/filetypes/video.svg#{$file-version}");
+    }
+    
+    // TEXT DOCUMENTS
+    &[href$=".rtf"],
+    &[href$=".doc"],
+    &[href$=".docx"],
+    &[href$=".docm"],
+    &[href$=".dot"],
+    &[href$=".dotm"],
+    &[href$=".dotx"],
+    &[href$=".sxw"],
+    &[href$=".stw"],
+    &[href$=".odt"],
+    &[href$=".fodt"] {
+        @include link-file-base-css;
+        background-image: url("#{$skinImagePath}/filetypes/document.svg#{$file-version}");
+    }
+    
+    // SPREADSHEETS DOCUMENTS
+    &[href$=".csv"],
+    &[href$=".xls"],
+    &[href$=".xlsm"],
+    &[href$=".xlsx"],
+    &[href$=".xlt"],
+    &[href$=".xltm"],
+    &[href$=".xltx"],
+    &[href$=".sxc"],
+    &[href$=".stc"],
+    &[href$=".ods"],
+    &[href$=".fods"] {
+        @include link-file-base-css;
+        background-image: url("#{$skinImagePath}/filetypes/spreadsheet.svg#{$file-version}");
+    }
+    
+    // PRESENTATION DOCUMENTS
+    &[href$=".ppt"],
+    &[href$=".pps"],
+    &[href$=".pot"],
+    &[href$=".pptm"],
+    &[href$=".pptx"],
+    &[href$=".potm"],
+    &[href$=".potx"],
+    &[href$=".ppsx"],
+    &[href$=".ppam"],
+    &[href$=".sldx"],
+    &[href$=".sldm"],
+    &[href$=".odp"],
+    &[href$=".otp"],
+    &[href$=".sdd"],
+    &[href$=".sxi"],
+    &[href$=".sti"] {
+        @include link-file-base-css;
+        background-image: url("#{$skinImagePath}/filetypes/presentaion.svg#{$file-version}");
+    }
+    
+    // PICTURE
+    &[href$=".gif"][target],
+    &[href$=".jpg"][target],
+    &[href$=".jpeg"][target],
+    &[href$=".png"][target],
+    &[href$=".tiff"],
+    &[href$=".eps"],
+    &[href$=".wmf"],
+    &[href$=".emf"],
+    &[href$=".svg"][target],
+    &[href$=".ai"],
+    &[href$=".odp"],
+    &[href$=".otp"],
+    &[href$=".sdd"],
+    &[href$=".sxi"],
+    &[href$=".sti"] {
+        @include link-file-base-css;
+        background-image: url("#{$skinImagePath}/filetypes/picture.svg#{$file-version}");
+    }
+    
+    // ARCHIVES
+    &[href$=".7zip"],
+    &[href$=".ace"],
+    &[href$=".arj"],
+    &[href$=".bz2"],
+    &[href$=".cab"],
+    &[href$=".gz"],
+    &[href$=".ice"],
+    &[href$=".iso"],
+    &[href$=".jar"],
+    &[href$=".sfx"],
+    &[href$=".rar"],
+    &[href$=".tgz"],
+    &[href$=".zip"] {
+        @include link-file-base-css;
+        background-image: url("#{$skinImagePath}/filetypes/archive.svg#{$file-version}");
+    }
+    
+    
+    // CODE
+    &[href$=".txt"],
+    &[href$=".htm"],
+    &[href$=".html"],
+    &[href$=".as"],
+    &[href$=".js"],
+    &[href$=".css"],
+    &[href$=".less"],
+    &[href$=".scss"] {
+        @include link-file-base-css;
+        background-image: url("#{$skinImagePath}/filetypes/code.svg#{$file-version}");
+    }
+    
+    &[href$=".pdf"] {
+        @include link-file-base-css;
+        background-image: url("#{$skinImagePath}/filetypes/pdf.svg#{$file-version}");
+    }
+}
