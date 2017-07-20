@@ -43,22 +43,23 @@
         <meta name="msapplication-TileColor" content="<?php echo $pageThemeColor; ?>">
         <link rel="shortcut icon" href="<?php echo $pageIconPath; ?>/ico-48.png">
         
-        <link rel="stylesheet" href="<?php echo $skinPath.'/index.css'; ?>">
+        <link rel="stylesheet" href="<?php echo isProduction($GLOBALS['siteDomain']) ? '/build/css/static.min.css' : $skinPath.'/index.css'; ?>">        
         <link rel="stylesheet" href="build/css/jquery.fancybox.min.css">
         
         <?php
-            showScriptLinks([
-                'build/js/modernizr-custom.min.js',
-                'build/js/jquery-3.2.1.min.js',
-                'build/js/tether.min.js',
-                'build/js/bootstrap.min.js',
-                'build/js/jquery.fancybox.min.js',
-                'build/js/lazysizes.min.js',
-                'build/js/mediaCheck.min.js',
+            echo getScriptLinks([
+                'assets/modernizr-custom.min.js',
+                'vendor/jquery-3.2.1/jquery-3.2.1.min.js',
+                'vendor/tether-1.3.3/dist/js/tether.min.js',
+                'vendor/bootstrap-4.0.0-alpha.6/dist/js/bootstrap.min.js',
+                'vendor/fancybox-3.0/dist/jquery.fancybox.min.js',
+                'vendor/lazysizes-4.0.0-rc2/lazysizes.min.js',
+                'vendor/mediaCheck-0.4.6/mediaCheck.min.js',
                 'assets/page-all.js',
-            ], 'head.js');
+            ], 'build/js/head.js');
+            
+            echo '<script type="application/ld+json">' . file_get_contents('build/js/json-head-data.json') . '</script>';
         ?>
-        <?php showJsonFromFile('assets/json-head-data.json'); ?>
     </head>
     <body class="is-responsive">
         <header></header>
@@ -66,7 +67,7 @@
             <article>
                 <h1>Heading 1</h1>
                 <ul>
-                    <li><a href="http://domain.com">externí odkaz</a> v textu</li>
+                    <li><a href="http://www.cebre.us" target="_blank">externí odkaz</a> v textu</li>
                     <li><a href="mailto:aaa@aaa.com">e-mail</a> na osobu nebo firmu</li>
                     <li><a href="tel:0420123456789">telefon</a> s možností vytočení</li>
                     <li><a href="aa.pdf">soubor ke stažení</a> [PDF; 1,0 MB]</li>
@@ -80,8 +81,6 @@
             </aside>
         </main>
         <footer></footer>
-        <?php
-            showAalyticsTracking('');
-        ?>
+        <?php echo getGA(''); ?>
     </body>
 </html>
