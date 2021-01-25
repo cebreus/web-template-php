@@ -10,8 +10,7 @@ $pageIcon = 'project';
 $pageIconPath = '/assets/icons';
 
 // PRODUCTION DOMAIN
-$siteDomain = 'default-web.cebre.us';
-//$siteDomain = 'default-web';
+$siteDomain = 'web-template-php.cebre.us';
 
 // SKIN NAME
 $skin = 'default';

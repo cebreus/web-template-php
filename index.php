@@ -42,10 +42,10 @@
         <meta name="msapplication-TileImage" content="<?php echo $pageIconPath; ?>/ico-144.png">
         <meta name="msapplication-TileColor" content="<?php echo $pageThemeColor; ?>">
         <link rel="shortcut icon" href="<?php echo $pageIconPath; ?>/ico-48.png">
-        
-        <link rel="stylesheet" href="<?php echo isProduction($GLOBALS['siteDomain']) ? '/build/css/static.min.css' : $skinPath.'/index.css'; ?>">        
+
+        <link rel="stylesheet" href="<?php echo isProduction($GLOBALS['siteDomain']) ? '/build/css/static.min.css' : $skinPath.'/index.css'; ?>">
         <link rel="stylesheet" href="build/css/jquery.fancybox.min.css">
-        
+
         <?php
             echo getScriptLinks([
                 'assets/modernizr-custom.min.js',
@@ -58,7 +58,10 @@
                 'assets/page-all.js',
             ], 'build/js/head.js');
             
-            echo '<script type="application/ld+json">' . file_get_contents('build/js/json-head-data.json') . '</script>';
+            $jsonHeadData = 'build/js/json-head-data.json';
+            if (fileIsIncludable($jsonHeadData)) {
+                echo '    <script type="application/ld+json">' . file_get_contents($jsonHeadData) . '</script>';
+            }
         ?>
     </head>
     <body class="is-responsive">
@@ -67,17 +70,17 @@
             <article>
                 <h1>Heading 1</h1>
                 <ul>
-                    <li><a href="http://www.cebre.us" target="_blank">externí odkaz</a> v textu</li>
+                    <li><a href="https://www.cebre.us" target="_blank">externí odkaz</a> v textu</li>
                     <li><a href="mailto:aaa@aaa.com">e-mail</a> na osobu nebo firmu</li>
                     <li><a href="tel:0420123456789">telefon</a> s možností vytočení</li>
                     <li><a href="aa.pdf">soubor ke stažení</a> [PDF; 1,0 MB]</li>
                 </ul>
             </article>
             <aside class="main-content__gallery row">
-                <div class="col-sm-3"><a href="content/pictures/detail.png" data-fancybox="gallery"><img class="img-responsive img-thumbnail" src="content/pictures/preview.png" alt="sample image"></a></div>
-                <div class="col-sm-3"><a href="content/pictures/detail.png" data-fancybox="gallery"><img class="img-responsive img-thumbnail" src="content/pictures/preview.png" alt="sample image"></a></div>
-                <div class="col-sm-3"><a href="content/pictures/detail.png" data-fancybox="gallery"><img class="img-responsive img-thumbnail" src="content/pictures/preview.png" alt="sample image"></a></div>
-                <div class="col-sm-3"><a href="content/pictures/detail.png" data-fancybox="gallery"><img class="img-responsive img-thumbnail" src="content/pictures/preview.png" alt="sample image"></a></div>
+                <div class="col-sm-3"><a href="assets/detail.jpg" data-fancybox="gallery"><img class="img-responsive img-thumbnail" src="assets/preview.jpg" alt="sample image"></a></div>
+                <div class="col-sm-3"><a href="assets/detail.jpg" data-fancybox="gallery"><img class="img-responsive img-thumbnail" src="assets/preview.jpg" alt="sample image"></a></div>
+                <div class="col-sm-3"><a href="assets/detail.jpg" data-fancybox="gallery"><img class="img-responsive img-thumbnail" src="assets/preview.jpg" alt="sample image"></a></div>
+                <div class="col-sm-3"><a href="assets/detail.jpg" data-fancybox="gallery"><img class="img-responsive img-thumbnail" src="assets/preview.jpg" alt="sample image"></a></div>
             </aside>
         </main>
         <footer></footer>
